@@ -1,12 +1,35 @@
-
-import '../src/style.css'
-
+import axios from "axios";
+import { useState, useEffect } from "react";
+import "../src/style.css";
 
 function App() {
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    axios
+      .get("https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood")
+      .then((res) => {
+        // console.log(res.data.meals);
+        setItems(res.data.meals);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const itemsList = items.map(({ strMeal, strMealThumb, idMeal }) => {
+    return (
+      <section className="card">
+        <img src={strMealThumb} alt="meal-image" />
+        <section className="content">
+          {strMeal} <br /> #{idMeal}
+        </section>
+      </section>
+    );
+  });
+
   return (
     <>
-      <div>Meals</div>
-
+      <div className="items-container">{itemsList}</div>
     </>
   );
 }
